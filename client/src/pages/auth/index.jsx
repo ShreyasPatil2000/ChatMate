@@ -1,94 +1,52 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import { useState } from "react";
 import Victory from "@/assets/victory.svg";
 import Background from "@/assets/login2.png";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
 import { SIGNUP_ROUTE, LOGIN_ROUTE } from "@/utils/constants";
 import { useNavigate } from "react-router-dom";
 import { useAppStore } from "@/store";
+import { useAuthValidation } from "@/components/logic/Auth";
+import PasswordInput from "@/components/logic/PasswordInput";
 
 const Auth = () => {
   const navigate = useNavigate();
-  const { setUserInfo } = useAppStore()
+  const { setUserInfo } = useAppStore();
+  const { validateLogin, validateSignup } = useAuthValidation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const validateLogin = () => {
-    if(!email.length) {
-      toast.error("Email is required.");
-      return false;
-    }
-    if(!password.length) {
-      toast.error("Password is required.");
-      return false;
-    }
-    return true;
-  }
-
-  const validateSignup = () => {
-    if(!email.length) {
-      toast.error("Email is required.");
-      return false;
-    }
-    if(!password.length) {
-      toast.error("Password is required.");
-      return false;
-    }
-    if(password.length < 10) {
-      toast.error("Password needs to be at least 10 characters long.");
-      return false;
-    }
-    if(password.search(/[a-z]/i) < 0) {
-      toast.error("Password must contain at least 1 lowercase letter.");
-      return false;
-    }
-    if(password.search(/[A-Z]/i) < 0) {
-      toast.error("Password must contain at least 1 uppercase letter.");
-      return false;
-    }
-    if (password.search(/[!@#$%^&*(),.?":{}|<>]/) < 0) {
-      toast.error("Password must contain at least 1 special character.");
-      return false;
-    }
-    if(password !== confirmPassword) {
-      toast.error("Password and confirmation password should be the same.");
-      return false;
-    }
-    return true;
-  };
-  
-  const handleLogin = async() => {
-    if(validateLogin()) {
-      const response = await apiClient.post(LOGIN_ROUTE, {email, password}, {withCredentials: true});
-      if(response.data.user.id) {
+  const handleLogin = async () => {
+    if (validateLogin(email, password)) {
+      const response = await apiClient.post(
+        LOGIN_ROUTE,
+        { email, password },
+        { withCredentials: true }
+      );
+      if (response.data.user.id) {
         setUserInfo(response.data.user);
-        if(response.data.user.profileSetup) {
-          navigate("/chat");
-        }
-        else {
-          navigate("/profile");
-        }
+        navigate(response.data.user.profileSetup ? "/chat" : "/profile");
       }
       console.log({ response });
     }
   };
 
-  const handleSignup = async() => {
-    if(validateSignup()) {
-      const response = await apiClient.post(SIGNUP_ROUTE, {email, password}, {withCredentials: true});
-      if(response.status === 201) {
+  const handleSignup = async () => {
+    if (validateSignup(email, password, confirmPassword)) {
+      const response = await apiClient.post(
+        SIGNUP_ROUTE,
+        { email, password },
+        { withCredentials: true }
+      );
+      if (response.status === 201) {
         setUserInfo(response.data.user);
         navigate("/profile");
       }
-      console.log({ response });
     }
   };
-
 
   return (
     <div className="h-[100vh] w-[100vw] flex items-center justify-center">
@@ -119,7 +77,10 @@ const Auth = () => {
                   Signup
                 </TabsTrigger>
               </TabsList>
-              <TabsContent className="flex flex-col gap-5 mt-10" value="login">
+              <TabsContent
+                className="flex flex-col gap-5 mt-10 relative"
+                value="login"
+              >
                 <Input
                   placeholder="Email"
                   type="email"
@@ -127,18 +88,22 @@ const Auth = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                <Input
+                <PasswordInput
                   placeholder="Password"
-                  type="password"
-                  className="rounded-full p-6"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <Button className='rounded-full p-6' onClick={handleLogin}> 
-                  Login 
+                <Button className="rounded-full p-6" onClick={handleLogin}>
+                  Login
+                </Button>
+                <Button className="rounded-full p-6">
+                  Sign In With Google
                 </Button>
               </TabsContent>
-              <TabsContent className="flex flex-col gap-5" value="signup">
+              <TabsContent
+                className="flex flex-col gap-5 relative"
+                value="signup"
+              >
                 <Input
                   placeholder="Email"
                   type="email"
@@ -146,29 +111,28 @@ const Auth = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                <Input
+                <PasswordInput
                   placeholder="Password"
-                  type="password"
-                  className="rounded-full p-6"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                <Input
+                <PasswordInput
                   placeholder="Confirm Password"
-                  type="password"
-                  className="rounded-full p-6"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
-                <Button className='rounded-full p-6' onClick={handleSignup}> 
+                <Button className="rounded-full p-6" onClick={handleSignup}>
                   Signup
+                </Button>
+                <Button className="rounded-full p-6">
+                  Sign In With Google
                 </Button>
               </TabsContent>
             </Tabs>
           </div>
         </div>
         <div className="hidden xl:flex justify-center items-center">
-          <img src={Background} alt="background login" className="h-[620px]"/>
+          <img src={Background} alt="background login" className="h-[620px]" />
         </div>
       </div>
     </div>
