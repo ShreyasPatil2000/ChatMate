@@ -1,4 +1,3 @@
-// useAuthValidation.js
 import { toast } from "sonner";
 
 export const useAuthValidation = () => {

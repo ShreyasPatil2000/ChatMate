@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import ProfileInfo from "./components/profile-info";
 import NewDM from "./components/new-dm";
 import { apiClient } from "@/lib/api-client";
@@ -29,7 +28,6 @@ const ContactsContainer = () => {
         setChannels(response.data.channels);
       }
     };
-  
     getContacts();
     getChannels();
   }, [setChannels, setDirectMessagesContacts]);

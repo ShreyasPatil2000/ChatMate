@@ -1,6 +1,4 @@
-/* eslint-disable no-unused-vars */
 import { animationDefaultOptions } from "@/lib/utils";
-import React from "react";
 import Lottie from "react-lottie";
 
 const EmptyChatContainer = () => {

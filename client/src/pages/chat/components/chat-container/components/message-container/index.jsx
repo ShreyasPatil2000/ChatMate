@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import { useAppStore } from "@/store";
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import moment from "moment";
 import { apiClient } from "@/lib/api-client";
 import { GET_ALL_MESSAGES_ROUTE, GET_CHANNEL_MESSAGES, HOST } from "@/utils/constants";

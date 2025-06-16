@@ -1,6 +1,4 @@
-/* eslint-disable no-unused-vars */
 import { RiCloseFill } from "react-icons/ri";
-import React from "react";
 import { useAppStore } from "@/store";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { HOST } from "@/utils/constants";

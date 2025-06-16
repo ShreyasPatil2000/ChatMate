@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import { useAppStore } from "@/store";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";

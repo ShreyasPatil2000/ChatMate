@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import { useAppStore } from "@/store";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import ContactsContainer from "./components/contacts-container";
